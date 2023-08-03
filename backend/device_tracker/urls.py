@@ -1,7 +1,5 @@
 from django.urls import path, include
 
-urlpatterns = [
-
-]
+urlpatterns = []
 
 app_name = "device_tracker"
