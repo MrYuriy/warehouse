@@ -77,13 +77,13 @@ class IP(models.Model):
 
 
 class Device(models.Model):
-    type_device = models.ForeignKey(DeviceType, on_delete=models.CASCADE)
-    name = models.CharField(max_length=255)
-    serial_number = models.CharField(max_length=255, unique=True)
-    status = models.ForeignKey(Status, on_delete=models.CASCADE)
-    ip = models.ForeignKey(IP, blank=True, null=True, on_delete=models.SET_NULL)
-    ports = models.ManyToManyField(Port, related_name="devices", blank=True)
+    device_type = models.ForeignKey(DeviceType, on_delete=models.CASCADE)
+    device_name = models.CharField(max_length=255)
+    device_serial_number = models.CharField(max_length=255, unique=True)
+    device_status = models.ForeignKey(Status, on_delete=models.CASCADE)
+    device_ip = models.ForeignKey(IP, blank=True, null=True, on_delete=models.SET_NULL)
+    device_ports = models.ManyToManyField(Port, related_name="devices", blank=True)
     department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name="devices")
 
     def __str__(self):
-        return f"{self.type_device} {self.name}: {self.serial_number}"
+        return f"{self.device_type} {self.device_name}: {self.device_serial_number}"
