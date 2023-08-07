@@ -15,7 +15,7 @@ class Department(models.Model):
     """
     like: Site + department name
     """
-    department = models.CharField(max_length=255)
+    department = models.CharField(max_length=255, unique=True)
     site = models.ForeignKey(Site, on_delete=models.CASCADE)
 
     class Meta:

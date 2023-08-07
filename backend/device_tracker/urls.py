@@ -12,7 +12,7 @@ from device_tracker.views import (
 )
 
 router = routers.DefaultRouter()
-router.register(r"device", DeviceViewSet)
+router.register("device", DeviceViewSet)
 router.register(r"port", PortViewSet)
 router.register(r"site", SiteViewSet)
 router.register(r"ip", IPViewSet)

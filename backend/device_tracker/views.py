@@ -13,6 +13,8 @@ from device_tracker.models import (
 from device_tracker.serializers import (
     SiteSerializer,
     DepartmentSerializer,
+    DepartmentListSerializer,
+    DepartmentDetailSerializer,
     StatusSerializer,
     DeviceTypeSerializer,
     IPSerializer,
@@ -42,6 +44,20 @@ class SiteViewSet(ModelViewSet):
 class DepartmentViewSet(ModelViewSet):
     queryset = Department.objects.all()
     serializer_class = DepartmentSerializer
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return DepartmentListSerializer
+        if self.action == "retrieve":
+            return DepartmentDetailSerializer
+        return DepartmentSerializer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        site = self.request.GET.get("site")
+        if site:
+            queryset = queryset.filter(site__site=site)
+        return queryset
 
 
 class StatusViewSet(ModelViewSet):

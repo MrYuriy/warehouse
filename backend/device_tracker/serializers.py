@@ -19,7 +19,15 @@ class SiteSerializer(serializers.ModelSerializer):
 class DepartmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Department
-        fields = "__all__"
+        fields = ("department", "site")
+
+
+class DepartmentListSerializer(DepartmentSerializer):
+    site = serializers.SlugRelatedField(read_only=True, slug_field="site")
+
+
+class DepartmentDetailSerializer(DepartmentSerializer):
+    site = SiteSerializer(read_only=True)
 
 
 class StatusSerializer(serializers.ModelSerializer):
@@ -69,7 +77,7 @@ class PortListDeviceSerializer(serializers.ModelSerializer):
 
 class DeviceSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Devicegit
+        model = Device
         fields = (
             "id",
             "device_type",
