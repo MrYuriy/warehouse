@@ -48,31 +48,26 @@ class IPSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class IPListSerializer(IPSerializer):
+    department = serializers.SlugRelatedField(read_only=True, slug_field="department")
+
+
+class IPDetailSerializer(IPSerializer):
+    department = DepartmentSerializer(read_only=True)
+
+
 class PortSerializer(serializers.ModelSerializer):
-    site = serializers.CharField(source="site.site")
-
-    def create(self, validate_data):
-
-        site = validate_data.pop("site")
-        site = site.pop("site")
-        port = Port.objects.create(site_id=site, **validate_data)
-        return port
-
     class Meta:
         model = Port
         fields = "__all__"
 
 
-class PortListDeviceSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Port
-        fields = "__all__"
-        list_serializer_class = serializers.ListSerializer
+class PortListDeviceSerializer(PortSerializer):
+    site = serializers.SlugRelatedField(read_only=True, slug_field="site")
 
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        data = (representation["port"])
-        return data
+
+class PortDetailDeviceSerializer(PortSerializer):
+    site = SiteSerializer(read_only=True)
 
 
 class DeviceSerializer(serializers.ModelSerializer):
