@@ -41,11 +41,12 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "device_tracker",
-    "rest_framework",
-    "user",
     "rest_framework",
     "rest_framework_simplejwt.token_blacklist",
+    "device_tracker",
+    "user",
+    "device_transaction",
+
 ]
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
