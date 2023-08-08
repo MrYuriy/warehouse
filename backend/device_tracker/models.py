@@ -62,7 +62,7 @@ class Port(models.Model):
     site = models.ForeignKey(Site, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.port}"
+        return f"{self.port} - {self.site}"
 
 
 class IP(models.Model):

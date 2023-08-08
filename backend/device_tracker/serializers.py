@@ -1,4 +1,7 @@
 from rest_framework import serializers
+from django.db import transaction
+from django.shortcuts import get_object_or_404
+
 from device_tracker.models import (
     Site,
     Department,
@@ -61,6 +64,12 @@ class PortSerializer(serializers.ModelSerializer):
         model = Port
         fields = "__all__"
 
+    def update(self, instance, validated_data):
+        instance.site = validated_data.get("site", instance.site)
+        instance.port = validated_data.get("port", instance.port)
+        instance.save()
+        return instance
+
 
 class PortListDeviceSerializer(PortSerializer):
     site = serializers.SlugRelatedField(read_only=True, slug_field="site")
@@ -87,9 +96,51 @@ class DeviceSerializer(serializers.ModelSerializer):
     def validate(self, data):
         ports = data.get("device_ports")
         ip = data.get("device_ip")
-        if not ports or not ip:
+        if not ports and not ip:
             raise serializers.ValidationError("Device mast to have IP or Port")
         return data
+
+    def update(self, instance, validated_data):
+        new_serial_number = validated_data.get("device_serial_number", None)
+        fields_changed = {}
+
+        if instance.device_serial_number not in [None, new_serial_number]:
+            # if user change serial number its meat changing physical device
+            with transaction.atomic():
+                new_devise = Device(
+                    device_type=validated_data.get("device_type", instance.device_type),
+                    device_name=validated_data.get("device_name", instance.device_name),
+                    device_serial_number=new_serial_number,
+                    device_status=get_object_or_404(Status, status="WORK"),
+                    device_ip=validated_data.get("device_ip", instance.device_ip),
+                    department=validated_data.get("department", instance.department)
+                )
+                new_devise.save()
+                new_devise.device_ports.set(validated_data.get("device_ports", instance.device_ports))
+
+                instance.device_status = get_object_or_404(Status, status="REPLACED")
+                instance.device_ports.set([])
+                instance.save()
+                instance = new_devise
+        else:
+            for field in instance._meta.fields:
+                field_name = field.attname
+                if field_name in validated_data and getattr(instance, field_name) != validated_data[field_name]:
+                    fields_changed[field_name] = {
+                        "old_value": getattr(instance, field_name),
+                        "new_value": validated_data[field_name],
+                    }
+            print(fields_changed)
+
+            instance.device_type = validated_data.get("device_type", instance.device_type)
+            instance.device_name = validated_data.get("device_name", instance.device_name)
+            instance.device_serial_number = validated_data.get("device_serial_number", instance.device_serial_number)
+            instance.device_status = validated_data.get("device_status", instance.device_status)
+            instance.device_ip = validated_data.get("device_ip", instance.device_ip)
+            instance.device_ports.set(validated_data.get("device_ports", instance.device_ports.all()))
+            instance.department = validated_data.get("department", instance.department)
+            instance.save()
+        return instance
 
 
 class DeviceListSerializer(DeviceSerializer):

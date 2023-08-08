@@ -25,7 +25,7 @@ class MyDeviceAdminForm(forms.ModelForm):
 
 
 class PortAdmin(admin.ModelAdmin):
-    list_display = ("port",)
+    list_display = ("port", "site")
     search_fields = ("port",)
 
 
