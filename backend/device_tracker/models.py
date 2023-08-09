@@ -24,7 +24,7 @@ class Department(models.Model):
         ]
 
     def __str__(self):
-        return f"Dzial {self.site.site} ({self.department})"
+        return f"{self.department}"
 
 
 class Status(models.Model):

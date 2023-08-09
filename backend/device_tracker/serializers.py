@@ -102,10 +102,25 @@ class DeviceSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         new_serial_number = validated_data.get("device_serial_number", None)
-        fields_changed = {}
+        # changed_fields - dictionary for transaction that contain fields what was change
+        changed_fields = {}
+        for attr, value in validated_data.items():
+            if attr == 'device_ports':
+                old_ports = set(instance.device_ports.all())
+                new_ports = set(value)
+                if old_ports != new_ports:
+                    changed_fields[attr] = {
+                        "old_value": [port.port for port in old_ports],
+                        "new_value": [port.port for port in new_ports]
+                    }
 
+            else:
+                if getattr(instance, attr) != value:
+                    changed_fields[attr] = {"old_value": str(getattr(instance, attr)), "new_value": str(value)}
+
+        # if user change serial number its meat changing physical device
         if instance.device_serial_number not in [None, new_serial_number]:
-            # if user change serial number its meat changing physical device
+
             with transaction.atomic():
                 new_devise = Device(
                     device_type=validated_data.get("device_type", instance.device_type),
@@ -123,15 +138,6 @@ class DeviceSerializer(serializers.ModelSerializer):
                 instance.save()
                 instance = new_devise
         else:
-            for field in instance._meta.fields:
-                field_name = field.attname
-                if field_name in validated_data and getattr(instance, field_name) != validated_data[field_name]:
-                    fields_changed[field_name] = {
-                        "old_value": getattr(instance, field_name),
-                        "new_value": validated_data[field_name],
-                    }
-            print(fields_changed)
-
             instance.device_type = validated_data.get("device_type", instance.device_type)
             instance.device_name = validated_data.get("device_name", instance.device_name)
             instance.device_serial_number = validated_data.get("device_serial_number", instance.device_serial_number)
