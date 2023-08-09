@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.db import transaction
 from django.shortcuts import get_object_or_404
+from device_transaction.utils import create_transaction
 
 from device_tracker.models import (
     Site,
@@ -101,6 +102,8 @@ class DeviceSerializer(serializers.ModelSerializer):
         return data
 
     def update(self, instance, validated_data):
+        request = self.context.get("request")
+
         new_serial_number = validated_data.get("device_serial_number", None)
         # changed_fields - dictionary for transaction that contain fields what was change
         changed_fields = {}
@@ -146,6 +149,7 @@ class DeviceSerializer(serializers.ModelSerializer):
             instance.device_ports.set(validated_data.get("device_ports", instance.device_ports.all()))
             instance.department = validated_data.get("department", instance.department)
             instance.save()
+        create_transaction(user=request.user, device=instance, changed_fields=changed_fields)
         return instance
 
 

@@ -135,3 +135,8 @@ class DeviceViewSet(ModelViewSet):
             queryset = queryset.filter(device_status__status=status)
 
         return queryset
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context["request"] = self.request
+        return context
