@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %} Home page {% endblock %}
+{%block navigation %}
+<br>
+{% endblock %}
+{% block content %}
+    <br>
+    <h1>Device List</h1>
+    <ul id="device-list"></ul>
+    <script>
+        const apiUrl = "{{ api_url }}"; // Inject the API URL here
+    </script>
+    <script src="{% static 'js/all-device.js' %}"></script>
+{% endblock %}

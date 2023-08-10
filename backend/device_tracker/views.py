@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
+from warehouse import settings
 from device_tracker.models import (
     Site,
     Department,
@@ -113,7 +114,7 @@ class PortViewSet(ModelViewSet):
 
 class DeviceViewSet(ModelViewSet):
     queryset = Device.objects.all()
-    permission_classes = (IsAuthenticated, )
+    #permission_classes = (IsAuthenticated, )
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -140,3 +141,13 @@ class DeviceViewSet(ModelViewSet):
         context = super().get_serializer_context()
         context["request"] = self.request
         return context
+
+
+def home(request):
+    return render(request, "device_tracker/home.html")
+
+
+def devices(request):
+    api_url = settings.HOST
+    context = {'api_url': api_url}
+    return render(request, "device_tracker/devices.html", context)

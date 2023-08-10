@@ -1,5 +1,6 @@
 from django.urls import path, include
 from rest_framework import routers
+from device_tracker import views
 from device_tracker.views import (
     DeviceViewSet,
     PortViewSet,
@@ -21,7 +22,9 @@ router.register(r"department", DepartmentViewSet)
 router.register(r"device-status", DeviceStatusViewSet)
 
 urlpatterns = [
-    path("", include(router.urls)),
+    path("api/", include(router.urls)),
+    path("", views.home, name="home"),
+    path("devices/", views.devices, name="devices")
 ]
 
 app_name = "device_tracker"
