@@ -30,7 +30,7 @@ SECRET_KEY = os.environ["SECRET_KEY"]
 DEBUG = os.environ.get("DEBUG", "") != "False"
 
 ALLOWED_HOSTS = []
-
+HOST = os.environ["HOST"]
 
 # Application definition
 
@@ -63,7 +63,7 @@ ROOT_URLCONF = "warehouse.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [os.path.join(BASE_DIR, 'templates')],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -124,14 +124,17 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
-
-STATIC_URL = "static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "static_root")
+STATIC_URL = "/static/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
