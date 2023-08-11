@@ -151,3 +151,9 @@ def devices(request):
     api_url = settings.HOST
     context = {'api_url': api_url}
     return render(request, "device_tracker/devices.html", context)
+
+
+def device_detail(request, device_id):
+    api_url = settings.HOST
+    context = {'api_url': api_url}
+    return render(request, 'device_tracker/device-detail.html', context)

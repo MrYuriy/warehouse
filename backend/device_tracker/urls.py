@@ -24,7 +24,8 @@ router.register(r"device-status", DeviceStatusViewSet)
 urlpatterns = [
     path("api/", include(router.urls)),
     path("", views.home, name="home"),
-    path("devices/", views.devices, name="devices")
+    path("devices/<int:device_id>/", views.device_detail, name="device-detail"),
+    path("devices/", views.devices, name="devices"),
 ]
 
 app_name = "device_tracker"

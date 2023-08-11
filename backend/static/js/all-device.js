@@ -1,5 +1,6 @@
+// all-device.js
+
 async function fetchDevices() {
-    console.log(apiUrl + 'device_tracker/api/device/');
     const response = await fetch(apiUrl + '/device_tracker/api/device/');
     const data = await response.json();
     return data;
@@ -12,7 +13,11 @@ async function displayDevices() {
     devices.forEach(device => {
         const listItem = document.createElement('li');
         listItem.innerHTML = `
-            <strong>${device.device_type}</strong> ${device.device_name}: ${device.device_serial_number}
+            <strong>${device.device_type}</strong>
+            <a class="device-link" href="/device_tracker/devices/${device.id}/">
+                 ${device.device_name}: ${device.device_serial_number}
+            </a>
+            <br>
             Status: ${device.device_status}
             IP: ${device.device_ip}
             Ports: ${device.device_ports.join(', ')}
@@ -22,4 +27,6 @@ async function displayDevices() {
     });
 }
 
-displayDevices();
+document.addEventListener('DOMContentLoaded', () => {
+    displayDevices();
+});
