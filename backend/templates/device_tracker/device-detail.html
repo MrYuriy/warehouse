@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %} Device Detail {% endblock %}
+{% block content %}
+    <br>
+    <h1>Device Detail</h1>
+    <div id="device-detail"></div>
+    <a href="{% url 'device_tracker:devices' %}">Back to Device List</a>
+    <script>
+        const deviceApiUrl = "{{ api_url }}/device_tracker/api/device/";
+    </script>
+    <script src="{% static 'js/detail-device.js' %}"></script>
+{% endblock %}

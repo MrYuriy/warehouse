@@ -9,7 +9,9 @@ class MyDeviceAdminForm(forms.ModelForm):
     """
     def clean_device_ports(self):
         cleaned_ports = [port.port for port in self.cleaned_data.get("device_ports")]
-        existing_device = Device.objects.prefetch_related("device_ports").all()
+        existing_device = Device.objects.prefetch_related("device_ports").all().\
+            exclude(device_serial_number__icontains=self.cleaned_data.get("device_serial_number"))
+
         port_reserved_list = []
 
         for device in existing_device:
