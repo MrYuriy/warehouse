@@ -5,6 +5,39 @@
     <br>
     <h1>Device Detail</h1>
     <div id="device-detail"></div>
+    <form id="edit-device-form">
+        <h2>Edit Device Details</h2>
+        <label for="device-name">Device Name:</label>
+        <input type="text" id="device-name" name="device-name" required>
+        <br>
+        <label for="device-serial-number">Serial Number:</label>
+        <input type="text" id="device-serial-number" name="device-serial-number" required>
+        <br>
+        <label for="device-status">Status:</label>
+        <select id="device-status" name="device-status" required>
+            <!-- Options will be populated dynamically using JavaScript -->
+        </select>
+        <br>
+        <label for="device-ip">IP Address:</label>
+        <input type="text" id="device-ip" name="device-ip">
+        <br>
+        <label for="device-ports">Ports:</label>
+        <select id="device-ports" name="device-ports" multiple>
+            <!-- Options will be populated dynamically using JavaScript -->
+        </select>
+        <br>
+        <label for="device-type">Device Type:</label>
+        <select id="device-type" name="device-type" required>
+            <!-- Options will be populated dynamically using JavaScript -->
+        </select>
+        <br>
+        <label for="department">Department:</label>
+        <select id="department" name="department" required>
+            <!-- Options will be populated dynamically using JavaScript -->
+        </select>
+        <br>
+        <button type="submit">Save Changes</button>
+    </form>
     <a href="{% url 'device_tracker:devices' %}">Back to Device List</a>
     <script>
         const apiUrl = "{{ api_url }}";

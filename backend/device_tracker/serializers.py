@@ -23,7 +23,7 @@ class SiteSerializer(serializers.ModelSerializer):
 class DepartmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Department
-        fields = ("department", "site")
+        fields = ("id", "department", "site")
 
 
 class DepartmentListSerializer(DepartmentSerializer):
@@ -102,7 +102,7 @@ class DeviceSerializer(serializers.ModelSerializer):
         return data
 
     def update(self, instance, validated_data):
-        request = self.context.get("request")
+        #request = self.context.get("request")
 
         new_serial_number = validated_data.get("device_serial_number", None)
         # changed_fields - dictionary for transaction that contain fields what was change
@@ -149,7 +149,7 @@ class DeviceSerializer(serializers.ModelSerializer):
             instance.device_ports.set(validated_data.get("device_ports", instance.device_ports.all()))
             instance.department = validated_data.get("department", instance.department)
             instance.save()
-        create_transaction(user=request.user, device=instance, changed_fields=changed_fields)
+        #create_transaction(user=request.user, device=instance, changed_fields=changed_fields)
         return instance
 
 
